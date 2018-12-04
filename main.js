@@ -411,7 +411,6 @@ $(document).ready(function() {
     function getTranslationButton(){
       if(containsTranslationButton()){
         return $("._43f9._63qh a", parent)[0];
-        //return span.previousSibling;
       }
     }
 
@@ -876,7 +875,7 @@ $(document).ready(function() {
         const intensity = vader.SentimentIntensityAnalyzer.polarity_scores(translatedText);
 
       //If it is not one of supported language, call once.
-        $("#translation-box").append("<div id='emToggleContainer'><div id='emotionToggle'><h2 id='entity-label' style='color: white; margin-bottom: 4px; margin-top: 5px;background-color: #3b5998; border-radius: 4px; text-align:center; padding:2px;cursor:pointer;'onMouseOver=\"this.style.background=\'#486ebe\'\" onMouseOut=\"this.style.background=\'#3b5998\'\"> Emotion Analysis </h2></div><div id='eQuestion' style='color:gray; display:inline-block'>?</div></div><div id=\'emInfo\'></div>");
+        $("#translation-box").append("<div id='emToggleContainer'><div id='emotionToggle'><h2 id='entity-label' style='color: white; margin-bottom: 4px; margin-top: 5px;background-color: #3b5998; border-radius: 4px; text-align:center; padding:2px;'> Emotion Analysis </h2></div><div id='eQuestion' style='color:gray; display:inline-block'>?</div></div><div id=\'emInfo\'></div>");
 
         $("#emToggleContainer").css('margin-top', '2px');
         $("#emToggleContainer").css('margin-bottom', '4px');
