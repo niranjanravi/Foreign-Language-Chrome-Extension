@@ -411,8 +411,8 @@ $(document).ready(function() {
 
     function getTranslationButton(){
       if(containsTranslationButton()){
-        var span = $("._43f9._63qh a", parent)[0];
-        return span.previousSibling;
+        return $("._43f9._63qh a", parent)[0];
+        //return span.previousSibling;
       }
     }
 
