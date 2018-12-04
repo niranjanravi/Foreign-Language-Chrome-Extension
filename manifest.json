@@ -1,0 +1,35 @@
+{
+    "name" : "Test",
+    "version" : "0.1",
+    "manifest_version" : 2,
+    "description":"General Use",
+    "background":{
+        "scripts":[
+                "jquery-3.2.1.min.js",
+                "selectlang.js",
+                "http_requester.js"
+            ],
+        "persistent": false
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://*/*", "http://*/*", "<all_urls>"],
+        "js": ["jquery-3.2.1.min.js", "bundle.js"],
+        "run_at": "document_end"
+      }
+    ],
+    "permissions": [
+        "contextMenus", 
+        "tabs",
+        "activeTab",
+        "http://*/*",
+        "https://*/*",
+        "storage"
+    ],
+    "browser_action": {
+        "default_popup": "selectlang.html"
+    },
+    "web_accessible_resources": [
+      "img/*.png"
+    ]
+}
