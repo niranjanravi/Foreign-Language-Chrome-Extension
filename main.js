@@ -583,8 +583,12 @@ $(document).ready(function() {
                 addWikiText(extract, false);
               }
             } else {
+              console.log("No wiki link found");
+              var link = "https://www.google.com/search?q=" + entity.replace(/[&\\#,+'"()$=~%*{}]/g, ' ').split(' ').join('+');
               analysis += "<span style='margin:auto'><span style='font-size:14px'><b>" + entity + "</b></span><br></span>";
-              analysis += "<p>No corresponding Wikipedia article found</p>";
+              analysis += '</span><br><input type="button" value="Google Search" class="googlebutton" onclick="window.open(\'' + link + '\')" ';
+              analysis += 'style="font-size:14px; font-weight:bold; background-color:#e5e5e5; border-radius:2px; border:1px solid #e4e4e4; color:#666; padding:10px; cursor:pointer;" onMouseOver="this.style.color=\'#333\'; this.style.background=\'#f5f5f5\'" onMouseOut="this.style.background=\'#e4e4e4\'; this.style.color=\'#666\'" />';
+            
             }
         });
         // detect first image title from wikipedia
