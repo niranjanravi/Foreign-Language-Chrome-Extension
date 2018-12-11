@@ -305,6 +305,23 @@ $(document).ready(function() {
     }
 
     function clickButton(content) {
+
+      // TODO: 
+      if(containsTranslationButton()){
+        var translateButton = getTranslationButton();
+        translateButton.onclick =  function() {
+          setTimeout(function(){
+            console.log("Translation button clicked");
+            $("#translation-box").remove();
+            analyzedFbId.add(fbId);
+            postId = fbId;
+            addTranslationBox();
+            uniqueEntities = [];
+            translateText(main, language1, false);
+          }, 300);          
+        };
+      }
+
       $(".btn-class").on("click", function() {
         $("#translation-box").remove();
         analyzedFbId.add(fbId);
@@ -342,8 +359,6 @@ $(document).ready(function() {
           // unable to determine what language it is without calling an API
           // for now, we just know it's not English, so we create the hover box
           fbIds[fbId] = "n/a";
-          // addHoverBox();
-          // createButton();
           clickButton(content);
         }
       } else {
