@@ -22,8 +22,7 @@
         "contextMenus", 
         "tabs",
         "activeTab",
-        "http://*/*",
-        "https://*/*",
+        "https://facebook.com/*",
         "storage"
     ],
     "browser_action": {
