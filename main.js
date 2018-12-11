@@ -305,6 +305,7 @@ $(document).ready(function() {
 
     function clickButton(content) {
       $(".btn-class").on("click", function() {
+        $("#translation-box").remove();
         analyzedFbId.add(fbId);
         postId = fbId;
 
