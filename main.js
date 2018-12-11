@@ -500,7 +500,7 @@ $(document).ready(function() {
               if (extract.match(/</g).length > extract.match(/>/g).length || extract.length < 40) {
                 $.getJSON("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&exsentences=2&redirects&titles=" + title, function(data) {
                   pageId = Object.keys(data["query"]["pages"])[0];
-                  addWikiText(["query"]["pages"][pageId]["extract"], false);
+                  addWikiText(data["query"]["pages"][pageId]["extract"], false);
                 })
               } else {
                 addWikiText(extract, false);
