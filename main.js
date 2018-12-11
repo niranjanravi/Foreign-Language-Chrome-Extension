@@ -492,6 +492,7 @@ $(document).ready(function() {
             pageId = Object.keys(data["query"]["pages"])[0];
             if (data["query"]["pages"][pageId]["extract"]) {
               realTitle = data.query.pages[pageId].title
+              console.log("Link:",link);
               analysis += "<span style='margin:auto'><span style='font-size:14px'><b>" + realTitle + "</b></span><br></span>";
               analysis += "<a href='" + link + "' target='blank'>" + link + "</a></span>";
               var extract = data["query"]["pages"][pageId]["extract"];
@@ -506,9 +507,9 @@ $(document).ready(function() {
               }
             } else {
               console.log("No wiki link found");
-              var link = "https://www.google.com/search?q=" + entity.replace(/[&\\#,+'"()$=~%*{}]/g, ' ').split(' ').join('+');
+              var googleLink = "https://www.google.com/search?q=" + entity.replace(/[&\\#,+'"()$=~%*{}]/g, ' ').split(' ').join('+');
               analysis += "<span style='margin:auto'><span style='font-size:14px'><b>" + entity + "</b></span><br></span>";
-              analysis += '</span><br><input type="button" value="Google Search" class="googlebutton" onclick="window.open(\'' + link + '\')" ';
+              analysis += '</span><br><input type="button" value="Google Search" class="googlebutton" onclick="window.open(\'' + googleLink + '\')" ';
               analysis += 'style="font-size:14px; font-weight:bold; background-color:#e5e5e5; border-radius:2px; border:1px solid #e4e4e4; color:#666; padding:10px; cursor:pointer;" onMouseOver="this.style.color=\'#333\'; this.style.background=\'#f5f5f5\'" onMouseOut="this.style.background=\'#e4e4e4\'; this.style.color=\'#666\'" />';
             
             }
