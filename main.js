@@ -532,7 +532,6 @@ $(document).ready(function() {
       });
     }
 
-    var emotionAnalysisDone = false;
     function runEmotionAnalysis(translatedText) {
         // Find sentiment analysis scores through the Vader library
         const vader = require('vader-sentiment');
@@ -571,30 +570,27 @@ $(document).ready(function() {
         $("#eQuestion").click(function() { //slide question box down when button is clicked
           $("#emInfo").slideToggle();
         });
+        
+        //run sentiment-analysis
+        $("#translation-box").append("<div id = 'white-box3'></div>");
+        $("#white-box3").css('background-color', 'white');
+        $("#white-box3").css('height', 'auto');
+        $("#white-box3").css('width', 'auto');
+        $("#white-box3").css('padding-top', '15px');
+        $("#white-box3").css('padding-right', '15px');
+        $("#white-box3").css('padding-left', '15px');
+        $("#white-box3").css('padding-bottom', '15px');
+        $("#white-box3").append("<div id='senHeader'><h2>Overall Sentiment</h2></div>");
+        $("#senHeader").css('text-align', 'center');
+        $("#senHeader").css('margin-bottom', '8px');
 
-        if(!emotionAnalysisDone){
-            //run sentiment-analysis
-            $("#translation-box").append("<div id = 'white-box3'></div>");
-            $("#white-box3").css('background-color', 'white');
-            $("#white-box3").css('height', 'auto');
-            $("#white-box3").css('width', 'auto');
-            $("#white-box3").css('padding-top', '15px');
-            $("#white-box3").css('padding-right', '15px');
-            $("#white-box3").css('padding-left', '15px');
-            $("#white-box3").css('padding-bottom', '15px');
-            $("#white-box3").append("<div id='senHeader'><h2>Overall Sentiment</h2></div>");
-            $("#senHeader").css('text-align', 'center');
-            $("#senHeader").css('margin-bottom', '8px');
+        var sentimentScore = intensity.compound;
+        drawType(sentimentScore); //draw Strength and Type Boxes
 
-            var sentimentScore = intensity.compound;
-            drawType(sentimentScore); //draw Strength and Type Boxes
+        //draw sentiment analysis bars
+        //draw emoticons and %
 
-            //draw sentiment analysis bars
-            //draw emoticons and %
-
-            drawSentAnalysisBars(sentimentScore);
-            emotionAnalysisDone = true;
-        }
+        drawSentAnalysisBars(sentimentScore);
     }
     
     function drawSentAnalysisBars(score) {
