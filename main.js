@@ -23,8 +23,6 @@ var translatedText; // updates when switching to link section
 var wikiText = "";
 var pageLang;
 
-//const nlp = spacyNLP.nlp;
-
 // variables for use in entity analysis - global because want it to be preserved
 // between user content analysis and link content analysis
 var matchedWords = []; // array of matched text items in English
@@ -63,6 +61,7 @@ function getFbId(elt) {
     return id;
 }
 
+// Add text from Wikipedia to the "Keyword Analysis" box
 function addWikiText(extract, trans) {
   if (extract.indexOf("\n") >= 0 && extract.substring(0, extract.indexOf("\n")).length > 40) {
     extract = extract.substring(0, extract.indexOf("\n"));
@@ -258,100 +257,50 @@ $(document).ready(function() {
       content = content.replace(/See More/i, "");
       content = content.replace(/&quot;/g, '"');
       content = content.replace(/&/g, ' ');
-      // console.log("Before translation: " + content);
+      var translateButton = getTranslationButton();
 
-      //if language is english, don't run through google translate
-      if (language == "en"){
-        translatedText = content;
-        translatedText = translatedText.replace(/See Translation/i, "");
-        translatedText = translatedText.replace(/See More/i, "");
-
-          if (!linkSection) {
-            translatedTextOrig = translatedText; // store translation of original user content
-            translatedTextFull = translatedText;
-            if (nativeLang.indexOf('en') > -1) {
-              $("#translation-box").html("<div id='translationToggle'><h2 style='color:white; margin-bottom:4px; margin-top:15px; background-color: #3b5998; border-radius: 4px; text-align:center; padding:2px;'> Translation </h2></div><div id=\'white-box\'></div><br>");
-            } else {
-              $("#translation-box").html("<div id='translationToggle'><h2 style='color:white; margin-bottom:4px; margin-top:15px; background-color: #3b5998; border-radius: 4px; text-align:center; padding:2px;'> Text </h2></div><div id=\'white-box\'></div><br>");
-            }
-            $("#white-box").css('overflow-y', 'auto');
-            $("#white-box").css('align-items', 'stretch');
-            $("#white-box").css('max-height', '200px');
-            $("#white-box").css('background-color', 'white');
-            $("#white-box").css('height', 'auto');
-            $("#white-box").css('padding', '10px');
-            $("#white-box").css('width', 'calc(100% - 20px)');
-            $("#white-box").css('word-wrap', 'break-word');
-            $("#white-box").css('display', 'inline-block');
-          } else {
-            translatedTextFull += " " + translatedText;
-          }
-
-
-          if (textrazorSupported.indexOf(language) >= 0) {
-            // run entity analysis in original language, if supported
-            langCode = textrazorCodes[textrazorSupported.indexOf(language)];
-            runEntityAnalysis(content, langCode, linkSection);
-          } else {
-            // otherwise run analysis on translation
-            runEntityAnalysis(translatedText, "eng", linkSection);
-          }
+      console.log(content);
+      
+      // Clicks the translation button to read the post
+      if(containsTranslationButton()){
+          translateButton.click();
+          addHoverBox();
+          createButton();
+          addTranslationBox();
       }
-      else{ //if language is not english
 
-        var translateButton = getTranslationButton();
+      // Waits 1 second because it takes a while to click the translation button
+      setTimeout(function(){
+          var postParent = getPostDiv();
+          var translationDiv = $("._5wpt ._50f4 div", postParent)[0];
+          var translatedText = translationDiv.textContent;
 
-        console.log(content);
+          translatedText = translatedText.replace(/See Translation/i, "");
+          translatedText = translatedText.replace(/See More/i, "");
 
-        if(containsTranslationButton()){
-            translateButton.click();
-            addHoverBox();
-            createButton();
-            addTranslationBox();
-        }
-        
-        
-        setTimeout(function(){
-            var postParent = getPostDiv();
-            console.log(postParent);
-            var translationDiv = $("._5wpt ._50f4 div", postParent)[0];
-            console.log(translationDiv);
-            var translatedText = translationDiv.textContent;
+          console.log("After translation: " + translatedText);
 
-            translatedText = translatedText.replace(/See Translation/i, "");
-            translatedText = translatedText.replace(/See More/i, "");
+          const intensity = vader.SentimentIntensityAnalyzer.polarity_scores(translatedText);
+          console.log("Intensity of Translation: " + intensity.compound);
 
-            console.log("After translation: " + translatedText);
+          translatedTextOrig = translatedText; // store translation of original user content
+          translatedTextFull = translatedText;
+          $("#translation-box").html("<div id='translationToggle'><h2 style='color:white; margin-bottom:4px; margin-top:15px; background-color: #3b5998; border-radius: 4px; text-align:center; padding:2px;'> Translation </h2></div><div id=\'white-box\'></div><br>");
+          $("#white-box").css('overflow-y', 'auto');
+          $("#white-box").css('align-items', 'stretch');
+          $("#white-box").css('max-height', '200px');
+          $("#white-box").css('background-color', 'white');
+          $("#white-box").css('height', 'auto');
+          $("#white-box").css('padding', '10px');
+          $("#white-box").css('width', 'calc(100% - 20px)');
+          $("#white-box").css('word-wrap', 'break-word');
+          $("#white-box").css('display', 'inline-block');
+          $("#white-box").text(translatedText);
 
-            const intensity = vader.SentimentIntensityAnalyzer.polarity_scores(translatedText);
-            console.log("Intensity of Translation: " + intensity.compound);
+          runEntityAnalysis(translatedText, "eng");
 
-            if (!linkSection) {
-              translatedTextOrig = translatedText; // store translation of original user content
-              translatedTextFull = translatedText;
-              console.log("about to add the thing");
-              $("#translation-box").html("<div id='translationToggle'><h2 style='color:white; margin-bottom:4px; margin-top:15px; background-color: #3b5998; border-radius: 4px; text-align:center; padding:2px;'> Translation </h2></div><div id=\'white-box\'></div><br>");
-              $("#white-box").css('overflow-y', 'auto');
-              $("#white-box").css('align-items', 'stretch');
-              $("#white-box").css('max-height', '200px');
-              $("#white-box").css('background-color', 'white');
-              $("#white-box").css('height', 'auto');
-              $("#white-box").css('padding', '10px');
-              $("#white-box").css('width', 'calc(100% - 20px)');
-              $("#white-box").css('word-wrap', 'break-word');
-              $("#white-box").css('display', 'inline-block');
-              $("#white-box").text(translatedText);
-              console.log("Added the thing");
-              
-              runEntityAnalysis(translatedText, "eng");
-
-              runEmotionAnalysis(translatedText);
-            } else {
-              console.log("link section");
-              translatedTextFull += " " + translatedText;
-            }
-        }, 1000);
-      }
+          runEmotionAnalysis(translatedText);
+      }, 1000);
     }
 
     function clickButton(content) {
@@ -360,16 +309,15 @@ $(document).ready(function() {
         postId = fbId;
 
         uniqueEntities = [];
-        console.log("About to add translation box");
         if(!containsTranslationButton()){
           addTranslationBox();
         }
-        //addTranslationBox();
         translateText(main, language1, false);
       });
     }
 
-    var parent; 
+    var parent; // represents the HTML element that is the parent of this post
+    // returns true if there is a "See Translation" button for this post
     function containsTranslationButton(){
       var origLink =  $('a._5pcq[href*="' + fbId +'"]')[0];
       parent = origLink.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
@@ -434,6 +382,7 @@ $(document).ready(function() {
      * When linkSection is true, content is from the link and not user content.
      */
     function runEntityAnalysis(content, langCode, linkSection) {
+      // Discoveres entities through the Compromise NLP package
       var compromiseEntities = nlp(content).topics().out('offsets');
       console.log('Entities found through compromise library:', compromiseEntities.map(x=>x.text));
 
@@ -507,7 +456,7 @@ $(document).ready(function() {
       $("#white-box").empty();
       $("#white-box").append(content);
 
-
+      // Displays Wikipedia descriptions for each entity
       $('.entity').unbind().click(function(){
 
         var analysis = "<span style='word-wrap: break-word'>";
@@ -569,10 +518,10 @@ $(document).ready(function() {
 
     var emotionAnalysisDone = false;
     function runEmotionAnalysis(translatedText) {
+        // Find sentiment analysis scores through the Vader library
         const vader = require('vader-sentiment');
         const intensity = vader.SentimentIntensityAnalyzer.polarity_scores(translatedText);
 
-      //If it is not one of supported language, call once.
         $("#translation-box").append("<div id='emToggleContainer'><div id='emotionToggle'><h2 id='entity-label' style='color: white; margin-bottom: 4px; margin-top: 5px;background-color: #3b5998; border-radius: 4px; text-align:center; padding:2px;'> Emotion Analysis </h2></div><div id='eQuestion' style='color:gray; display:inline-block'>?</div></div><div id=\'emInfo\'></div>");
 
         $("#emToggleContainer").css('margin-top', '2px');
@@ -629,8 +578,6 @@ $(document).ready(function() {
 
             drawSentAnalysisBars(sentimentScore);
             emotionAnalysisDone = true;
-        } else {
-            $("#white-box3").slideToggle();
         }
     }
     
